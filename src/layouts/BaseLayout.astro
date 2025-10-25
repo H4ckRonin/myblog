@@ -11,27 +11,26 @@ export interface Props {
 }
 const { title, description, permalink, current } = Astro.props;
 ---
+
 <html lang="en">
 <head>
   <BaseHead title={title} description={description} permalink={permalink} />
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
 </head>
-<body>
-  <div class="layout">
-    <Header current={current} />
+<body class="theme-dark">
+  <Header current={current} />
 
-    <main>
-      <slot />
-    </main>
+  <main>
+    <slot />
+  </main>
 
-    <Footer />
-  </div>
+  <Footer />
+
+  <script type="module" src="/js/terminal.js"></script>
 </body>
 </html>
 
 <style>
-  /* Global Layout Theme */
-  body {
+  body.theme-dark {
     margin: 0;
     font-family: 'Fira Code', monospace;
     background: linear-gradient(135deg, #0b0b0b 0%, #1c1c1c 100%);
@@ -40,13 +39,11 @@ const { title, description, permalink, current } = Astro.props;
     overflow-x: hidden;
   }
 
-  /* Scanline overlay */
-  body::before {
+  body.theme-dark::before {
     content: "";
     position: fixed;
     top: 0; left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100%; height: 100%;
     background: repeating-linear-gradient(
       rgba(255,255,255,0.02) 0px,
       rgba(255,255,255,0.02) 1px,
@@ -57,47 +54,15 @@ const { title, description, permalink, current } = Astro.props;
     z-index: 10;
   }
 
-  .layout {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
-
   main {
     flex: 1;
-    position: relative;
-    margin: 0 auto;
-    max-width: 1400px;
-    padding: 1em 2em;
-    box-sizing: border-box;
-    width: 100%;
     display: flex;
     flex-direction: column;
-  }
-
-  /* Links & accents */
-  a {
-    color: #d4b78c;
-    text-decoration: none;
-    transition: all 0.2s;
-  }
-  a:hover {
-    color: #39FF14; /* ACCESS GRANTED style green */
-    text-shadow: 0 0 5px #39FF14, 0 0 10px #39FF14;
-  }
-
-  /* Headings */
-  h1, h2, h3, h4, h5 {
-    color: #e6e0d6;
-  }
-
-  /* Optional: subtle flicker animation for headings */
-  h1, h2, h3 {
-    animation: flicker 2s infinite;
-  }
-
-  @keyframes flicker {
-    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
-    20%, 24%, 55% { opacity: 0.85; }
+    align-items: center;
+    padding: 2rem;
+    min-height: 100vh;
+    text-align: center;
+    position: relative;
+    z-index: 20;
   }
 </style>

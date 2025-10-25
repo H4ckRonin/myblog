@@ -8,14 +8,77 @@
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
-    /* Global Body & Background */
+    :root {
+      --bg-color: #0b0b0b;
+      --fg-color: #e6e0d6;
+      --accent-color: #d4b78c;
+      --card-bg: rgba(17,17,17,0.85);
+      --border-color: #222;
+      --scanline: rgba(255,255,255,0.02);
+    }
+    [data-theme="light"] {
+      --bg-color: #f7f5f0;
+      --fg-color: #111;
+      --accent-color: #8b6b34;
+      --card-bg: #fff;
+      --border-color: #ddd;
+      --scanline: rgba(0,0,0,0.03);
+    }
+
     body {
       margin: 0;
       font-family: 'Fira Code', monospace;
-      background: linear-gradient(135deg, #0b0b0b 0%, #1c1c1c 100%);
-      color: #e6e0d6;
-      position: relative;
+      background: linear-gradient(135deg, var(--bg-color) 0%, #1c1c1c 100%);
+      color: var(--fg-color);
       overflow-x: hidden;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* Top Navigation Bar */
+    header {
+      width: 100%;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      background: rgba(0,0,0,0.5);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    header .logo {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--accent-color);
+      text-decoration: none;
+    }
+
+    header nav a {
+      margin-left: 1.5rem;
+      color: var(--fg-color);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    header nav a:hover {
+      color: var(--accent-color);
+    }
+
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--accent-color);
+      border-radius: 4px;
+      padding: 4px 10px;
+      color: var(--accent-color);
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.3s, color 0.3s;
+    }
+    .theme-toggle:hover {
+      background: var(--accent-color);
+      color: var(--bg-color);
     }
 
     /* Scanline overlay */
@@ -26,8 +89,8 @@
       width: 100%;
       height: 100%;
       background: repeating-linear-gradient(
-        rgba(255,255,255,0.02) 0px,
-        rgba(255,255,255,0.02) 1px,
+        var(--scanline) 0px,
+        var(--scanline) 1px,
         transparent 1px,
         transparent 3px
       );
@@ -35,6 +98,7 @@
       z-index: 10;
     }
 
+    /* Container */
     .container {
       display: flex;
       flex-direction: column;
@@ -50,10 +114,9 @@
     h1.glitch {
       font-size: 3rem;
       font-weight: 600;
-      font-family: 'Fira Code', monospace;
-      color: #e6e0d6;
+      color: var(--fg-color);
       position: relative;
-      text-shadow: 0 0 2px #fff5e6, 0 0 5px #fff5e6, 0 0 10px #dcd0c0;
+      text-shadow: 0 0 2px #fff5e6, 0 0 5px #fff5e6, 0 0 10px var(--accent-color);
     }
     .glitch::before,
     .glitch::after {
@@ -62,55 +125,25 @@
       left: 0;
     }
     .glitch::before {
-      text-shadow: 1px 0 #d3c7b0, -1px 0 #c8bda5;
+      text-shadow: 1px 0 var(--accent-color), -1px 0 var(--fg-color);
       animation: glitchTop 1s infinite linear alternate-reverse;
     }
     .glitch::after {
-      text-shadow: 1px 0 #c8bda5, -1px 0 #d3c7b0;
+      text-shadow: 1px 0 var(--fg-color), -1px 0 var(--accent-color);
       animation: glitchBottom 1s infinite linear alternate-reverse;
     }
+
     @keyframes glitchTop {
       0%,50%,100%{transform: translate(0);}
       10%{transform: translate(-2px,-2px);}
       20%{transform: translate(2px,2px);}
-      30%{transform: translate(-1px,1px);}
-      40%{transform: translate(1px,-1px);}
     }
     @keyframes glitchBottom {
       0%,50%,100%{transform: translate(0);}
-      10%{transform: translate(1px,1px);}
+      10%{transform: translate(2px,2px);}
       20%{transform: translate(-2px,-1px);}
-      30%{transform: translate(2px,0);}
-      40%{transform: translate(-1px,1px);}
     }
 
-    /* Mission Briefing */
-    .mission-briefing {
-      font-family: 'Fira Code', monospace;
-      font-size: 1.1rem;
-      line-height: 1.7;
-      color: #e6e0d6;
-      text-shadow: 0 0 2px rgba(255,240,220,0.2);
-      margin-top: 1.5rem;
-      white-space: pre-wrap;
-      letter-spacing: 0.5px;
-      animation: briefingFlicker 2s infinite;
-    }
-    @keyframes briefingFlicker {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.95; }
-    }
-
-    .cursor {
-      display: inline-block;
-      margin-left: 2px;
-      color: #d4b78c;
-      text-shadow: 0 0 2px #fff5e6;
-      animation: blink 1s steps(2, start) infinite;
-    }
-    @keyframes blink { to { visibility: hidden; } }
-
-    /* Modules Grid */
     .modules-grid {
       margin-top: 3rem;
       display: grid;
@@ -120,89 +153,42 @@
       max-width: 1000px;
       position: relative;
     }
-    .modules-grid::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(0deg, rgba(212,183,140,0.05) 1px, transparent 1px);
-      background-size: 100% 20px;
-      animation: scan 3s linear infinite;
-      pointer-events: none;
-      z-index: 5;
-    }
-    @keyframes scan {
-      0% { background-position: 0 0; }
-      100% { background-position: 0 20px; }
-    }
 
     .module-card {
-      background: rgba(17,17,17,0.85);
+      background: var(--card-bg);
       border-radius: 6px;
       padding: 1rem;
       text-align: left;
-      position: relative;
-      overflow: hidden;
+      border: 2px solid var(--border-color);
       box-shadow: 0 0 15px rgba(212,183,140,0.2);
-      border: 2px solid #222;
       transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
-      animation: flicker 2s infinite;
-      z-index: 10;
-    }
-    .module-card::before {
-      content: "";
-      position: absolute;
-      top: 10%;
-      left: 5%;
-      width: 90%;
-      height: 80%;
-      border: 1px dashed rgba(212,183,140,0.1);
-      pointer-events: none;
     }
     .module-card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 0 25px #d4b78c;
-      border-color: #d4b78c;
+      box-shadow: 0 0 25px var(--accent-color);
+      border-color: var(--accent-color);
     }
     .module-card h3 {
       margin-top: 0;
-      color: #d4b78c;
+      color: var(--accent-color);
     }
     .module-card p {
-      color: #ccc;
-      font-size: 0.95rem;
+      color: var(--fg-color);
+      opacity: 0.8;
     }
     .launch-link {
       display: inline-block;
       margin-top: 0.8rem;
       padding: 5px 10px;
-      border: 1px solid #d4b78c;
+      border: 1px solid var(--accent-color);
       border-radius: 4px;
       font-size: 0.9rem;
-      color: #d4b78c;
+      color: var(--accent-color);
       text-decoration: none;
-      transition: background 0.2s, border-color 0.2s, color 0.2s;
     }
     .launch-link:hover {
-      background: #d4b78c;
-      border-color: #d4b78c;
-      color: #111;
-    }
-
-    @keyframes flicker {
-      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
-      20%, 24%, 55% { opacity: 0.85; }
-    }
-
-    .activity-dot {
-      position: absolute;
-      width: 4px;
-      height: 4px;
-      background: #d4b78c;
-      border-radius: 50%;
-      opacity: 0.7;
-      animation: blink 1.5s infinite;
+      background: var(--accent-color);
+      color: var(--bg-color);
     }
 
     /* Loading Screen */
@@ -210,8 +196,8 @@
       position: fixed;
       top:0; left:0;
       width:100%; height:100%;
-      background:#0b0b0b;
-      color:#d4b78c;
+      background: var(--bg-color);
+      color: var(--accent-color);
       font-family:'Fira Code', monospace;
       display:flex;
       justify-content:center;
@@ -220,6 +206,15 @@
       white-space:pre-wrap;
       z-index:1000;
     }
+
+    .cursor {
+      display: inline-block;
+      margin-left: 2px;
+      color: var(--accent-color);
+      text-shadow: 0 0 2px #fff5e6;
+      animation: blink 1s steps(2, start) infinite;
+    }
+    @keyframes blink { to { visibility: hidden; } }
   </style>
 </head>
 <body>
@@ -228,41 +223,44 @@
     <pre id="terminal-output"></pre>
   </div>
 
+  <!-- Top Bar -->
+  <header>
+    <a href="/" class="logo">H4ckronin</a>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/blog">Blog</a>
+      <a href="/about">About</a>
+    </nav>
+    <button id="theme-toggle" class="theme-toggle">🌙</button>
+  </header>
+
+  <!-- Main Content -->
   <div class="container" style="visibility:hidden;">
     <h1 class="glitch" data-text="H4ckronin">H4ckronin</h1>
-    <pre class="mission-briefing" id="mission-briefing"></pre>
-
     <div class="modules-grid">
       <div class="module-card">
         <h3>Havoc Module</h3>
         <p>Deep dive into advanced red teaming strategies and simulated attacks.</p>
         <a href="/blog/havoc-module" class="launch-link">Launch</a>
-        <span class="activity-dot" style="top:10%; left:15%; animation-delay:0s;"></span>
-        <span class="activity-dot" style="top:40%; left:70%; animation-delay:0.3s;"></span>
-        <span class="activity-dot" style="top:75%; left:30%; animation-delay:0.6s;"></span>
       </div>
       <div class="module-card">
         <h3>Mythic-Lite</h3>
         <p>Learn the lighter, portable exploits inspired by C2 frameworks.</p>
         <a href="/blog/mythic-lite" class="launch-link">Launch</a>
-        <span class="activity-dot" style="top:20%; left:25%; animation-delay:0.1s;"></span>
-        <span class="activity-dot" style="top:60%; left:60%; animation-delay:0.4s;"></span>
-        <span class="activity-dot" style="top:80%; left:40%; animation-delay:0.7s;"></span>
       </div>
       <div class="module-card">
         <h3>Sliver Armoury</h3>
         <p>Explore operational modules like a full-stack offensive toolkit.</p>
         <a href="/blog/sliver-armoury" class="launch-link">Launch</a>
-        <span class="activity-dot" style="top:15%; left:35%; animation-delay:0.2s;"></span>
-        <span class="activity-dot" style="top:50%; left:50%; animation-delay:0.5s;"></span>
-        <span class="activity-dot" style="top:85%; left:20%; animation-delay:0.8s;"></span>
       </div>
     </div>
   </div>
 
-  <script type="module">
+  <script>
     const terminalOutput = document.getElementById("terminal-output");
     const container = document.querySelector(".container");
+    const loadingScreen = document.getElementById("loading-screen");
+    const themeToggle = document.getElementById("theme-toggle");
 
     const lines = [
       "[SYSTEM] Initializing H4ckronin blog…",
@@ -271,8 +269,6 @@
 
     const highlightMap = {
       "[SYSTEM]":"#7fdfff",
-      "[STATUS]":"#7fdfff",
-      "[INFO]":"#7fdfff",
       "[ACCESS GRANTED]":"#00FF41"
     };
 
@@ -302,15 +298,36 @@
       terminalOutput.appendChild(cursor);
 
       await sleep(800);
-      document.getElementById("loading-screen").style.transition="opacity 0.8s";
-      document.getElementById("loading-screen").style.opacity="0";
+      loadingScreen.style.transition="opacity 0.8s";
+      loadingScreen.style.opacity="0";
       setTimeout(()=>{
-        document.getElementById("loading-screen").style.display="none";
+        loadingScreen.style.display="none";
         container.style.visibility="visible";
+        localStorage.setItem("loadingDone","true");
       },800);
     }
 
-    runTerminal();
+    if(localStorage.getItem("loadingDone") === "true") {
+      loadingScreen.style.display = "none";
+      container.style.visibility = "visible";
+    } else {
+      runTerminal();
+    }
+
+    // Theme toggle
+    function setTheme(mode) {
+      document.documentElement.setAttribute('data-theme', mode);
+      localStorage.setItem('theme', mode);
+      themeToggle.textContent = mode === 'dark' ? '🌙' : '☀️';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      const current = localStorage.getItem('theme') || 'dark';
+      setTheme(current === 'dark' ? 'light' : 'dark');
+    });
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
   </script>
 </body>
 </html>
